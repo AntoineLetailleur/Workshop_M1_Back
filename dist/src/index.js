@@ -8,6 +8,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const http_1 = require("http");
 const dotenv_1 = require("dotenv");
 const path_1 = __importDefault(require("path"));
+const Users_routes_1 = __importDefault(require("../routes/Users.routes"));
 ////    Utilitaires    \\\\
 //export const tokenSecret = crypto.randomBytes(64).toString("hex");
 //console.log("Le tokenSecret a été mis à jour avec succès.");
@@ -21,11 +22,11 @@ server.listen(port, () => {
     console.log(`Server http is running at : http://localhost:${port}`);
 });
 app.get("/", (_req, res) => {
-    res.json({ Message: "Bienvenue sur l'API Arosaje de notre groupe !" });
+    res.json({ Message: "Bienvenue sur l'API de SanteConnect" });
 });
 app.use(body_parser_1.default.json());
+app.use("/", Users_routes_1.default);
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// app.use("/", require("../routes/Users.routes"));
 // app.use("/", require("../routes/Annonce.routes"));
 // app.use("/", require("../routes/Fiche.routes"));
 // app.use("/", require("../routes/Photo.routes"));
