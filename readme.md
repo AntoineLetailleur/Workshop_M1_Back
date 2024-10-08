@@ -8,14 +8,14 @@ Antoine LETAILLEUR : Dev BACK
 Eliseo MURILLO : Dev FRONT  
 Thibault SCORIELLE : Dev FRONT  
 
-### Installer l'API localement
+## Installer l'API localement
 
 `npm install`
 
-#### Lancer l'API
+## Lancer l'API
 
 `npm start`
 
-##### Afficher variable d'environnement
+## Afficher variable d'environnement
 
 `echo $env:DATABASE_URL`
