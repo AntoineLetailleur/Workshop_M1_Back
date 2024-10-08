@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && ts-node-dev --respawn --env-file ./app/.env ./app/src/index.ts && node dist/index.js",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node ./app/prisma/seed.ts"
 
   },
   "keywords": [],
