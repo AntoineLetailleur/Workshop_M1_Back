@@ -8,7 +8,7 @@ Antoine LETAILLEUR : Dev BACK
 Eliseo MURILLO : Dev FRONT  
 Thibault SCORIELLE : Dev FRONT  
 
-### INSTALLER L'API LOCALEMENT
+### Installer l'API localement
 
 `npm install`
 
