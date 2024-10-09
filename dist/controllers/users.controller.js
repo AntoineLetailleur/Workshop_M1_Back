@@ -160,5 +160,17 @@ const usersController = {
             return res.status(500).json(formattedError);
         }
     }),
+    getAll: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const userService = new users_service_1.default();
+            var data = yield userService.getAll();
+            if (data) {
+                return res.status(200).json(data);
+            }
+        }
+        catch (error) {
+            return res.status(500).json(error);
+        }
+    })
 };
 exports.default = usersController;

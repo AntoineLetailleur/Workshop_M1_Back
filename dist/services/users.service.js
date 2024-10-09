@@ -76,6 +76,17 @@ class UsersService {
             }
         });
     }
+    getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield prisma.user.findMany();
+                return users;
+            }
+            catch (error) {
+                throw new Error(`Error during connection: ${error.message}`);
+            }
+        });
+    }
 }
 exports.default = UsersService;
 module.exports = UsersService;

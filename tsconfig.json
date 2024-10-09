@@ -106,7 +106,8 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "typeRoots": ["./app/interfaces/*.ts"]
   },
   "include": ["app/**/*.ts"],
   "exclude": ["node_modules"]

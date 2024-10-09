@@ -1,9 +1,10 @@
 import UsersService from "../services/users.service";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { Request, Response } from "express";
+import { Response, Request } from "express";
 import { tokenSecret } from "../src";
 import { formatJsonApiError } from "../serializers/error.serializer";
+
 
 const usersController = {
   validateRequest: (requiredRole: string[]) => {
