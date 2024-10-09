@@ -1,17 +1,15 @@
 import express from "express";
 import bodyParser from "body-parser";
 import crypto from "crypto";
-import swaggerUi from "swagger-ui-express";
 import { Request, Response } from "express";
 import { createServer } from "http";
 import { config } from "dotenv";
 import path from "path";
+import userRouter from "../routers/users.router";
 import YAML from "yamljs";
-import dotenv from 'dotenv';
-
+import swaggerUi from "swagger-ui-express";
 
 ////    Utilitaires    \\\\
-dotenv.config({ path: './app/.env' });
 // const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");
 // const swaggerDocument = YAML.load(swaggerDocumentPath);
 export const tokenSecret = crypto.randomBytes(64).toString("hex");
@@ -33,4 +31,4 @@ app.get("/", (_req: Request, res: Response) => {
   res.json({ Message: "Bienvenue sur l'API de SanteConnect" });
 });
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/", require("../routers/users.router"));
+app.use("/", userRouter);

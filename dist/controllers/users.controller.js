@@ -118,50 +118,6 @@ const usersController = {
             }
         });
     },
-    createUser: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { email, password, pseudo, ville, codePostal } = req.body;
-            const usersService = new users_service_1.default();
-            const existingUser = yield usersService.findUserByEmail(email);
-            if (existingUser) {
-                const formattedError = (0, error_serializer_1.formatJsonApiError)([
-                    {
-                        status: "400",
-                        title: "Bad request",
-                        detail: "l'email existe déjà.",
-                    },
-                ]);
-                res.set("Content-Type", "application/vnd.api+json");
-                return res.status(400).json(formattedError);
-            }
-            const hashedPassword = crypto_1.default
-                .createHash("sha256")
-                .update(password)
-                .digest("hex");
-            var data = yield usersService.createUser({
-                email,
-                password: hashedPassword,
-                pseudo,
-                ville,
-                codePostal,
-                roleId: 2,
-            });
-            res.set("Content-Type", "application/json");
-            return res.status(200).send(data);
-        }
-        catch (error) {
-            console.error(error);
-            const formattedError = (0, error_serializer_1.formatJsonApiError)([
-                {
-                    status: "500",
-                    title: "Internal Server Error",
-                    detail: error,
-                },
-            ]);
-            res.set("Content-Type", "application/vnd.api+json");
-            return res.status(500).json(formattedError);
-        }
-    }),
     getAll: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const userService = new users_service_1.default();

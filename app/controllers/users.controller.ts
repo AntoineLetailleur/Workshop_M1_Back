@@ -120,53 +120,6 @@ const usersController = {
     }
   },
 
-  createUser: async (req: Request, res: Response) => {
-    try {
-      const { email, password, pseudo, ville, codePostal } = req.body;
-      const usersService = new UsersService();
-
-      const existingUser = await usersService.findUserByEmail(email);
-      if (existingUser) {
-        const formattedError = formatJsonApiError([
-          {
-            status: "400",
-            title: "Bad request",
-            detail: "l'email existe déjà.",
-          },
-        ]);
-        res.set("Content-Type", "application/vnd.api+json");
-        return res.status(400).json(formattedError);
-      }
-
-      const hashedPassword = crypto
-        .createHash("sha256")
-        .update(password)
-        .digest("hex");
-
-      var data = await usersService.createUser({
-        email,
-        password: hashedPassword,
-        pseudo,
-        ville,
-        codePostal,
-        roleId: 2,
-      });
-      res.set("Content-Type", "application/json");
-      return res.status(200).send(data);
-    } catch (error) {
-      console.error(error);
-      const formattedError = formatJsonApiError([
-        {
-          status: "500",
-          title: "Internal Server Error",
-          detail: error,
-        },
-      ]);
-      res.set("Content-Type", "application/vnd.api+json");
-      return res.status(500).json(formattedError);
-    }
-  },
-
   getAll: async (req: Request, res: Response): Promise<any> => {
     try {
       const userService = new UsersService();

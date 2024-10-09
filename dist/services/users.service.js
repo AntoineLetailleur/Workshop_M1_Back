@@ -16,12 +16,12 @@ class UsersService {
     connection(_a) {
         return __awaiter(this, arguments, void 0, function* ({ email }) {
             try {
-                const user = yield prisma.users.findUnique({
+                const user = yield prisma.user.findUnique({
                     where: {
                         email: email,
                     },
                     include: {
-                        role: true,
+                    //role: true,
                     },
                 });
                 return { user };
@@ -34,7 +34,7 @@ class UsersService {
     findUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield prisma.users.findUnique({
+                const user = yield prisma.user.findUnique({
                     where: {
                         email: email,
                     },
@@ -43,36 +43,6 @@ class UsersService {
             }
             catch (error) {
                 throw new Error(`Error finding user by email: ${error.message}`);
-            }
-        });
-    }
-    createUser(userData) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const newUser = yield prisma.users.create({
-                    data: {
-                        email: userData.email,
-                        password: userData.password,
-                        pseudo: userData.pseudo,
-                        ville: userData.ville,
-                        codePostal: userData.codePostal,
-                        roleId: userData.roleId,
-                    },
-                    select: {
-                        id: true,
-                        password: false,
-                        email: true,
-                        pseudo: true,
-                        ville: true,
-                        codePostal: true,
-                        roleId: true,
-                        role: true,
-                    },
-                });
-                return newUser;
-            }
-            catch (error) {
-                throw new Error(`Error creating user: ${error.message}`);
             }
         });
     }

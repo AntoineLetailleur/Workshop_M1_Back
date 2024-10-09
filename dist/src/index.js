@@ -10,9 +10,8 @@ const crypto_1 = __importDefault(require("crypto"));
 const http_1 = require("http");
 const dotenv_1 = require("dotenv");
 const path_1 = __importDefault(require("path"));
-const dotenv_2 = __importDefault(require("dotenv"));
+const users_router_1 = __importDefault(require("../routers/users.router"));
 ////    Utilitaires    \\\\
-dotenv_2.default.config({ path: './app/.env' });
 // const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");
 // const swaggerDocument = YAML.load(swaggerDocumentPath);
 exports.tokenSecret = crypto_1.default.randomBytes(64).toString("hex");
@@ -31,4 +30,4 @@ app.get("/", (_req, res) => {
     res.json({ Message: "Bienvenue sur l'API de SanteConnect" });
 });
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/", require("../routers/users.router"));
+app.use("/", users_router_1.default);
