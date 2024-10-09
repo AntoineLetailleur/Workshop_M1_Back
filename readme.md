@@ -10,7 +10,11 @@ Thibault SCORIELLE : Dev FRONT
 
 ## Installer l'API localement
 
-`npm install`
+`npm install`  
+  
+Depuis votre dossier 'app'  
+
+`npx prisma generate`
 
 ## Lancer l'API
 
