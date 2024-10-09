@@ -4,11 +4,11 @@ import crypto from "crypto";
 import { Response, Request } from "express";
 import { tokenSecret } from "../src";
 import { formatJsonApiError } from "../serializers/error.serializer";
-
+import { RequestTest } from "../interfaces/requests.interface";
 
 const usersController = {
   validateRequest: (requiredRole: string[]) => {
-    return (req: Request, res: Response, next: Function) => {
+    return (req: RequestTest, res: Response, next: Function) => {
       const { authorization } = req.headers;
 
       if (!authorization) {
@@ -65,7 +65,7 @@ const usersController = {
     };
   },
 
-  login: async (req: Request, res: Response) : Promise<any> => {
+  async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
       req.body.password = crypto
@@ -88,7 +88,7 @@ const usersController = {
           },
         ]);
         res.set("Content-Type", "application/vnd.api+json");
-        return res.status(400).json(formattedError);
+        res.status(400).json(formattedError);
       }
 
       const token = jwt.sign(
@@ -105,7 +105,7 @@ const usersController = {
         }
       );
 
-      return res.json({ token });
+      res.json({ token });
     } catch (error) {
       console.error(error);
       const formattedError = formatJsonApiError([
@@ -116,7 +116,7 @@ const usersController = {
         },
       ]);
       res.set("Content-Type", "application/vnd.api+json");
-      return res.status(500).json(formattedError);
+      res.status(500).json(formattedError);
     }
   },
 
@@ -167,17 +167,17 @@ const usersController = {
     }
   },
 
-  getAll : async (req : Request, res : Response) : Promise<any> => {
-    try{
-        const userService = new UsersService();
-        var data = await userService.getAll();
-        if (data) {
-            return res.status(200).json(data);
-        }
-    }catch(error){
-        return res.status(500).json(error);
+  getAll: async (req: Request, res: Response): Promise<any> => {
+    try {
+      const userService = new UsersService();
+      var data = await userService.getAll();
+      if (data) {
+        return res.status(200).json(data);
+      }
+    } catch (error) {
+      return res.status(500).json(error);
     }
-  }
+  },
 };
 
 export default usersController;

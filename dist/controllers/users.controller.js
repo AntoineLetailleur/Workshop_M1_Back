@@ -70,52 +70,54 @@ const usersController = {
             }
         };
     },
-    login: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { email, password } = req.body;
-            req.body.password = crypto_1.default
-                .createHash("sha256")
-                .update(password)
-                .digest("hex");
-            const usersService = new users_service_1.default();
-            const { user } = yield usersService.connection({ email });
-            if (!user ||
-                user.email !== req.body.email ||
-                user.password !== req.body.password) {
+    login(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { email, password } = req.body;
+                req.body.password = crypto_1.default
+                    .createHash("sha256")
+                    .update(password)
+                    .digest("hex");
+                const usersService = new users_service_1.default();
+                const { user } = yield usersService.connection({ email });
+                if (!user ||
+                    user.email !== req.body.email ||
+                    user.password !== req.body.password) {
+                    const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                        {
+                            status: "400",
+                            title: "Bad request",
+                            detail: "Adresse email ou mot de passe invalide.",
+                        },
+                    ]);
+                    res.set("Content-Type", "application/vnd.api+json");
+                    res.status(400).json(formattedError);
+                }
+                const token = jsonwebtoken_1.default.sign({
+                    userId: user.id,
+                    role: user.role.libelle,
+                }, src_1.tokenSecret, {
+                    algorithm: "HS256",
+                    expiresIn: "24h",
+                    issuer: "http://localhost:3000/users",
+                    subject: user.id.toString(),
+                });
+                res.json({ token });
+            }
+            catch (error) {
+                console.error(error);
                 const formattedError = (0, error_serializer_1.formatJsonApiError)([
                     {
-                        status: "400",
-                        title: "Bad request",
-                        detail: "Adresse email ou mot de passe invalide.",
+                        status: "500",
+                        title: "Internal Server Error",
+                        detail: error,
                     },
                 ]);
                 res.set("Content-Type", "application/vnd.api+json");
-                return res.status(400).json(formattedError);
+                res.status(500).json(formattedError);
             }
-            const token = jsonwebtoken_1.default.sign({
-                userId: user.id,
-                role: user.role.libelle,
-            }, src_1.tokenSecret, {
-                algorithm: "HS256",
-                expiresIn: "24h",
-                issuer: "http://localhost:3000/users",
-                subject: user.id.toString(),
-            });
-            return res.json({ token });
-        }
-        catch (error) {
-            console.error(error);
-            const formattedError = (0, error_serializer_1.formatJsonApiError)([
-                {
-                    status: "500",
-                    title: "Internal Server Error",
-                    detail: error,
-                },
-            ]);
-            res.set("Content-Type", "application/vnd.api+json");
-            return res.status(500).json(formattedError);
-        }
-    }),
+        });
+    },
     createUser: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { email, password, pseudo, ville, codePostal } = req.body;
@@ -171,6 +173,6 @@ const usersController = {
         catch (error) {
             return res.status(500).json(error);
         }
-    })
+    }),
 };
 exports.default = usersController;
