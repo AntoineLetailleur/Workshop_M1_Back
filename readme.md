@@ -19,3 +19,7 @@ Thibault SCORIELLE : Dev FRONT
 ## Afficher variable d'environnement
 
 `echo $env:DATABASE_URL`
+
+## Lancer la base de données docker
+
+`docker run --name some-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest`
