@@ -133,14 +133,8 @@ function main() {
                 },
             },
         });
+        prisma.$disconnect();
         console.log('Seeding terminé!');
     });
 }
-main()
-    .catch((e) => {
-    console.error(e);
-    process.exit(1);
-})
-    .finally(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield prisma.$disconnect();
-}));
+main();

@@ -11,6 +11,7 @@ const http_1 = require("http");
 const dotenv_1 = require("dotenv");
 const path_1 = __importDefault(require("path"));
 const users_router_1 = __importDefault(require("../routers/users.router"));
+const citys_router_1 = __importDefault(require("../routers/citys.router"));
 ////    Utilitaires    \\\\
 // const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");
 // const swaggerDocument = YAML.load(swaggerDocumentPath);
@@ -31,3 +32,4 @@ app.get("/", (_req, res) => {
 });
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/", users_router_1.default);
+app.use("/", citys_router_1.default);

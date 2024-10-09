@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-async function main() {
+async function main() : Promise<void> {
   // Créer des villes
   const city1 = await prisma.city.create({
     data: {
@@ -134,14 +134,7 @@ async function main() {
     },
   });
 
+  prisma.$disconnect();
   console.log('Seeding terminé!');
 }
-
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main();
