@@ -11,15 +11,21 @@
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/jsonapi-serializer": "^3.6.8",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.5",
     "@types/swagger-ui-express": "^4.1.6",
+    "@types/yamljs": "^0.2.34",
     "prisma": "^5.20.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@prisma/client": "^5.20.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "jsonapi-serializer": "^3.6.9",
+    "jsonwebtoken": "^9.0.2",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   }
