@@ -64,7 +64,7 @@ const usersController = {
     };
   },
 
-  login: async (req: Request, res: Response) => {
+  login: async (req: Request, res: Response) : Promise<any> => {
     try {
       const { email, password } = req.body;
       req.body.password = crypto
@@ -165,6 +165,18 @@ const usersController = {
       return res.status(500).json(formattedError);
     }
   },
+
+  getAll : async (req : Request, res : Response) : Promise<any> => {
+    try{
+        const userService = new UsersService();
+        var data = await userService.getAll();
+        if (data) {
+            return res.status(200).json(data);
+        }
+    }catch(error){
+        return res.status(500).json(error);
+    }
+  }
 };
 
 export default usersController;

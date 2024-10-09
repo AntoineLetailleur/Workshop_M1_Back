@@ -24,13 +24,9 @@
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "dotenv": "^16.4.5",
-<<<<<<< HEAD
     "express": "^4.21.0",
     "jsonapi-serializer": "^3.6.9",
     "jsonwebtoken": "^9.0.2",
-=======
-    "express": "^4.21.1",
->>>>>>> 36501c9fb42687c4ee2694ece929ddad1b856aea
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   }

@@ -69,6 +69,15 @@ export default class UsersService {
       throw new Error(`Error creating user: ${error.message}`);
     }
   }
+
+  async getAll(){
+    try{
+        const users = await prisma.user.findMany();
+        return users;
+    }catch(error:any){
+      throw new Error(`Error during connection: ${error.message}`);
+    }
+  }
 }
 
 module.exports = UsersService;
