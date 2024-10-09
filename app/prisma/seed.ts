@@ -1,7 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import crypto from "crypto";
+
 const prisma = new PrismaClient();
 
 async function main() {
+
   // Créer des villes
   const city1 = await prisma.city.create({
     data: {
@@ -34,7 +37,7 @@ async function main() {
   const user1 = await prisma.user.create({
     data: {
       email: "user1@example.com",
-      password: "password123",
+      password: crypto.createHash("sha256").update("password123").digest("hex"),
       role: 'USER',
       city: {
         connect: { id: city1.id },
@@ -45,7 +48,7 @@ async function main() {
   const user2 = await prisma.user.create({
     data: {
       email: "user2@example.com",
-      password: "password456",
+      password: crypto.createHash("sha256").update("password456").digest("hex"),
       role: 'USER',
       city: {
         connect: { id: city2.id },
@@ -135,13 +138,8 @@ async function main() {
   });
 
   console.log('Seeding terminé!');
+
+  await prisma.$disconnect();
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main();
