@@ -60,6 +60,31 @@ export default class UsersService {
       throw new Error(`Error during connection: ${error.message}`);
     }
   }
+
+  async getUserInfos(id: number) {
+    try {
+      const user = await prisma.users.findUnique({
+        where: {
+          id: id,
+        },
+        select: {
+          email: true,
+          role: true,
+          city: {
+            select: {
+              name: true,
+              postal: true,
+              x: true,
+              y: true,
+            },
+          },
+        },
+      });
+      return user;
+    } catch (error: any) {
+      throw new Error(`Error finding user by email: ${error.message}`);
+    }
+  }
 }
 
 module.exports = UsersService;

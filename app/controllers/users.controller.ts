@@ -126,7 +126,7 @@ const usersController = {
     }
   },
 
-  updateCity : async (req : Request, res : Response) : Promise<any> => {
+  updateCity : async (req : Request, res : Response) => {
     try{
       const userService = new UsersService();
       const cityService = new CityService();
@@ -135,20 +135,45 @@ const usersController = {
       //Récupération de l'utilisateur
       const user = await userService.findUserById(idUser);
       if(!user){
-        return res.status(500).json("No user");
+        res.status(500).json("No user");
+        return;
       }
 
-      //Si un utilisateur existe alors on update sa ville
-      //Il faut checker que la nouvelle ville de l'utilisateur existe
       var city = await cityService.findByName(name);
       if(!city){
-        //On ajout un nouvelle utilisateur dans la city déjà existante et on update le cityId au niveau du user
         city = await cityService.addNewCity(postal,name,x,y);
       }
       const updateUser = await userService.updateCityById(user.id,city.id);
       res.status(200).send(updateUser);
     }catch (error) {
-      return res.status(500).json(error);
+      res.status(500).json(error);
+      return;
+    }
+  },
+
+  getUserInfos : async (req: Request, res: Response) => {
+
+    try {
+      const userId = req.userId as number;
+      const usersService = new UsersService();
+      var data = await usersService.getUserInfos(userId);
+
+      if (data) {
+        res.set('Content-Type', 'application/vnd.api+json');
+        res.status(200).send(data);
+      }
+    } catch (error) {
+      console.error(error);
+      const formattedError = formatJsonApiError([
+        {
+          status: '500',
+          title: 'Internal Server Error',
+          detail: error,
+        },
+      ]);
+      res.set('Content-Type', 'application/vnd.api+json');
+      res.status(500).json(formattedError);
+      return;
     }
   }
 };

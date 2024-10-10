@@ -130,20 +130,43 @@ const usersController = {
             //Récupération de l'utilisateur
             const user = yield userService.findUserById(idUser);
             if (!user) {
-                return res.status(500).json("No user");
+                res.status(500).json("No user");
+                return;
             }
-            //Si un utilisateur existe alors on update sa ville
-            //Il faut checker que la nouvelle ville de l'utilisateur existe
             var city = yield cityService.findByName(name);
             if (!city) {
-                //On ajout un nouvelle utilisateur dans la city déjà existante et on update le cityId au niveau du user
                 city = yield cityService.addNewCity(postal, name, x, y);
             }
             const updateUser = yield userService.updateCityById(user.id, city.id);
             res.status(200).send(updateUser);
         }
         catch (error) {
-            return res.status(500).json(error);
+            res.status(500).json(error);
+            return;
+        }
+    }),
+    getUserInfos: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const userId = req.userId;
+            const usersService = new users_service_1.default();
+            var data = yield usersService.getUserInfos(userId);
+            if (data) {
+                res.set('Content-Type', 'application/vnd.api+json');
+                res.status(200).send(data);
+            }
+        }
+        catch (error) {
+            console.error(error);
+            const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                {
+                    status: '500',
+                    title: 'Internal Server Error',
+                    detail: error,
+                },
+            ]);
+            res.set('Content-Type', 'application/vnd.api+json');
+            res.status(500).json(formattedError);
+            return;
         }
     })
 };

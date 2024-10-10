@@ -76,6 +76,33 @@ class UsersService {
             }
         });
     }
+    getUserInfos(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield prisma.users.findUnique({
+                    where: {
+                        id: id,
+                    },
+                    select: {
+                        email: true,
+                        role: true,
+                        city: {
+                            select: {
+                                name: true,
+                                postal: true,
+                                x: true,
+                                y: true,
+                            },
+                        },
+                    },
+                });
+                return user;
+            }
+            catch (error) {
+                throw new Error(`Error finding user by email: ${error.message}`);
+            }
+        });
+    }
 }
 exports.default = UsersService;
 module.exports = UsersService;
