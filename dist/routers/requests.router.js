@@ -7,5 +7,5 @@ const express_1 = __importDefault(require("express"));
 const requests_controller_1 = __importDefault(require("../controllers/requests.controller"));
 const users_controller_1 = __importDefault(require("../controllers/users.controller"));
 const router = express_1.default.Router();
-router.post("/request", users_controller_1.default.validateRequest(['USER', 'DOCTOR', 'ADMIN']), requests_controller_1.default.addNewRequest);
+router.post("/requests", users_controller_1.default.validateRequest(['USER', 'DOCTOR', 'ADMIN']), requests_controller_1.default.addNewRequest);
 exports.default = router;

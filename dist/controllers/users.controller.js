@@ -129,22 +129,63 @@ const usersController = {
         try {
             const userService = new users_service_1.default();
             const cityService = new citys_service_1.default();
-            const { idUser, name, postal, x, y } = req.body;
-            //Récupération de l'utilisateur
-            const user = yield userService.findUserById(idUser);
-            if (!user) {
-                res.status(500).json("No user");
-                return;
+            const { name } = req.body;
+            const idUser = req.userId;
+            if (idUser) {
+                const user = yield userService.findUserById(idUser);
+                if (!user) {
+                    const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                        {
+                            status: "500",
+                            title: "Internal Server Error",
+                            detail: "No user found",
+                        },
+                    ]);
+                    res.set("Content-Type", "application/vnd.api+json");
+                    res.status(500).json(formattedError);
+                    return;
+                }
+                var city = yield cityService.findByName(name);
+                if (!city) {
+                    console.log(req.body[0]);
+                    const { data } = yield axios_1.default.get(`https://api-adresse.data.gouv.fr/search/?q=${req.body.name}`);
+                    if (!data || !data.features || data.features.length === 0) {
+                        const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                            {
+                                status: "400",
+                                title: "City not found",
+                                detail: "La ville n'a pas été trouvée dans l'API.",
+                            },
+                        ]);
+                        res.status(400).json(formattedError);
+                        return;
+                    }
+                    const cityFeature = data.features[0];
+                    const { postcode, city: name } = cityFeature.properties;
+                    const [longitude, latitude] = cityFeature.geometry.coordinates;
+                    let existingCity = yield prisma.cities.create({
+                        data: {
+                            postal: parseInt(postcode),
+                            name: name,
+                            x: latitude,
+                            y: longitude,
+                        },
+                    });
+                    const updateUser = yield userService.updateCityById(user.id, existingCity.id);
+                    res.status(200).send(updateUser);
+                }
             }
-            var city = yield cityService.findByName(name);
-            if (!city) {
-                city = yield cityService.addNewCity(postal, name, x, y);
-            }
-            const updateUser = yield userService.updateCityById(user.id, city.id);
-            res.status(200).send(updateUser);
         }
         catch (error) {
-            res.status(500).json(error);
+            const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                {
+                    status: "500",
+                    title: "Internal Server Error",
+                    detail: error,
+                },
+            ]);
+            res.set("Content-Type", "application/vnd.api+json");
+            res.status(500).json(formattedError);
             return;
         }
     }),
@@ -204,7 +245,6 @@ const usersController = {
             const cityFeature = data.features[0];
             const { postcode, city: name } = cityFeature.properties;
             const [longitude, latitude] = cityFeature.geometry.coordinates;
-            console.log(latitude, longitude);
             let existingCity = yield prisma.cities.findFirst({
                 where: { postal: parseInt(postcode) },
             });

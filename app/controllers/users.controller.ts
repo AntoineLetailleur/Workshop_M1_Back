@@ -134,23 +134,70 @@ const usersController = {
     try{
       const userService = new UsersService();
       const cityService = new CityService();
-      const {idUser, name, postal, x, y} = req.body;
+      const { name } = req.body;
 
-      //Récupération de l'utilisateur
-      const user = await userService.findUserById(idUser);
-      if(!user){
-        res.status(500).json("No user");
-        return;
-      }
+      const idUser = req.userId;
 
-      var city = await cityService.findByName(name);
-      if(!city){
-        city = await cityService.addNewCity(postal,name,x,y);
+      if(idUser) {
+
+        const user = await userService.findUserById(idUser);
+        if(!user){
+          const formattedError = formatJsonApiError([
+            {
+              status: "500",
+              title: "Internal Server Error",
+              detail: "No user found",
+            },
+          ]);
+          res.set("Content-Type", "application/vnd.api+json");
+          res.status(500).json(formattedError);
+          return;
+        }
+
+        var city = await cityService.findByName(name);
+        if(!city){
+          console.log(req.body[0]);
+          const { data } = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${req.body.name}`);
+
+          if (!data || !data.features || data.features.length === 0) {
+            const formattedError = formatJsonApiError([
+              {
+                status: "400",
+                title: "City not found",
+                detail: "La ville n'a pas été trouvée dans l'API.",
+              },
+            ]);
+            res.status(400).json(formattedError);
+            return;
+          }
+    
+          const cityFeature = data.features[0];
+          const { postcode, city: name } = cityFeature.properties;
+          const [longitude, latitude] = cityFeature.geometry.coordinates;
+
+          let existingCity = await prisma.cities.create({
+            data: {
+              postal: parseInt(postcode),
+              name: name,
+              x: latitude,
+              y: longitude,
+            },
+          });
+          
+          const updateUser = await userService.updateCityById(user.id, existingCity.id);
+          res.status(200).send(updateUser);
+        }
       }
-      const updateUser = await userService.updateCityById(user.id,city.id);
-      res.status(200).send(updateUser);
     }catch (error) {
-      res.status(500).json(error);
+      const formattedError = formatJsonApiError([
+        {
+          status: "500",
+          title: "Internal Server Error",
+          detail: error,
+        },
+      ]);
+      res.set("Content-Type", "application/vnd.api+json");
+      res.status(500).json(formattedError);
       return;
     }
   },
@@ -218,7 +265,6 @@ const usersController = {
       const cityFeature = data.features[0];
       const { postcode, city: name } = cityFeature.properties;
       const [longitude, latitude] = cityFeature.geometry.coordinates;
-      console.log(latitude, longitude);
 
       let existingCity = await prisma.cities.findFirst({
         where: { postal: parseInt(postcode) },

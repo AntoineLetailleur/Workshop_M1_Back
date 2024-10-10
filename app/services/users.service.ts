@@ -54,6 +54,19 @@ export default class UsersService {
         data: {
           cityId: cityId, 
         },
+        select: {
+          email: true,
+          role: true,
+          password: false,
+          city: {
+            select: {
+              name: true,
+              postal: true,
+              x: true,
+              y: true,
+            },
+          },
+        }
       });
       return updateUser;
     }catch(error:any){

@@ -14,6 +14,8 @@ const users_router_1 = __importDefault(require("../routers/users.router"));
 const citys_router_1 = __importDefault(require("../routers/citys.router"));
 require("../interfaces/requests.interface");
 const requests_router_1 = __importDefault(require("../routers/requests.router"));
+const yamljs_1 = __importDefault(require("yamljs"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 ////    Config serveur HTTP    \\\\
 const app = (0, express_1.default)();
 const server = (0, http_1.createServer)(app);
@@ -30,9 +32,9 @@ app.use("/", users_router_1.default);
 app.use("/", citys_router_1.default);
 app.use("/", requests_router_1.default);
 ////    Utilitaires    \\\\
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");
-// const swaggerDocument = YAML.load(swaggerDocumentPath);
+const swaggerDocumentPath = path_1.default.join(__dirname, "../../swagger.yml");
+const swaggerDocument = yamljs_1.default.load(swaggerDocumentPath);
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
 exports.tokenSecret = crypto_1.default.randomBytes(64).toString("hex");
 console.log("Le tokenSecret a été mis à jour avec succès.");
 (0, dotenv_1.config)({ path: path_1.default.resolve(__dirname, "../app/.env") });

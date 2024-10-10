@@ -5,7 +5,7 @@ import usersController from "../controllers/users.controller";
 
 const router = express.Router();
 
-router.post("/request", usersController.validateRequest(['USER', 'DOCTOR', 'ADMIN']), requestsController.addNewRequest);
+router.post("/requests", usersController.validateRequest(['USER', 'DOCTOR', 'ADMIN']), requestsController.addNewRequest);
 
 export default router;
     

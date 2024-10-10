@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "9d8c8d1e-ee7e-441a-9a31-dc8416bcbd8d",
+		"name": "API SANTE CONNECT - HTTP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32255710",
+		"_collection_link": "https://team-api-arosage.postman.co/workspace/TEAM-API---AROSAGE-Workspace~49041945-25ed-4408-b133-b73be407fff3/collection/32255710-9d8c8d1e-ee7e-441a-9a31-dc8416bcbd8d?action=share&source=collection_link&creator=32255710"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "USERS - Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user1@example.com\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ant.zdjbzd@gmail.com\",\r\n    \"city\": \"Paris\",\r\n    \"password\": \"azerty\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Infos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzI4NTc5NTY0LCJleHAiOjE3Mjg2NjU5NjQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMC91c2VycyIsInN1YiI6IjEifQ.lF98Mms4MMRctjbg61NL2sTefXxy7hryyZp0SN_vd7Y",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/infos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"infos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users - City - Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzI4NTk4NDk1LCJleHAiOjE3Mjg2ODQ4OTUsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMC91c2VycyIsInN1YiI6IjEifQ.vvbPIHuVn8dI2y4qPoofyvRZbNaWfeJUX2ZCSk9s7Ig",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pau\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/cities",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cities",
+			"item": [
+				{
+					"name": "Cities - Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJET0NUT1IiLCJpYXQiOjE3Mjg1NjE4ODIsImV4cCI6MTcyODY0ODI4MiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwL3VzZXJzIiwic3ViIjoiMyJ9.BAf-6jtCpezy1XhikJnn8cXvxKpa6PVY2W35SYiYisw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postal\" : 59000,\r\n    \"name\" : \"Lille\",\r\n    \"x\" : 2.0,\r\n    \"y\" : 29.2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/city",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"city"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

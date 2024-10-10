@@ -30,9 +30,9 @@ app.use("/", cityRouter);
 app.use("/", requestsRouter);
 
 ////    Utilitaires    \\\\
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");
-// const swaggerDocument = YAML.load(swaggerDocumentPath);
+const swaggerDocumentPath = path.join(__dirname, "../../swagger.yml");
+const swaggerDocument = YAML.load(swaggerDocumentPath);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 export const tokenSecret = crypto.randomBytes(64).toString("hex");
 console.log("Le tokenSecret a été mis à jour avec succès.");
 config({ path: path.resolve(__dirname, "../app/.env") });

@@ -19,19 +19,17 @@ const requestsController = {
                 },
                 select: {
                     user: {
-                        select: { id: true } // Sélectionne uniquement l'ID des utilisateurs
+                        select: { id: true }
                     }
                 }
             })
-            // Récupération de la liste des users pour une requête
+
             if (userList.length > 0) {
-                // Itérer sur userList et vérifier les IDs
                 var foundUser = false;
                 for (const request of userList) {
                     for (const user of request.user) {
-                        console.log("User ID:", user.id); // Affiche chaque ID utilisateur
+                        console.log("User ID:", user.id); 
 
-                        // Vérifiez si l'utilisateur a l'ID que vous recherchez
                         if (user.id === userId) {
                             foundUser = true;
                         } 
@@ -43,7 +41,6 @@ const requestsController = {
                 } else {
                     console.log("L'utilisateur se joint à une demande déjà exprimée");
                 
-                    // Ajout de l'utilisateur à la liste en base de données
                     const updatedRequest = await prisma.requests.update({
                         where: {
                             service: serviceType,
@@ -51,7 +48,7 @@ const requestsController = {
                         },
                         data: {
                             user: {
-                                connect: { id: userId } // Connexion de l'utilisateur avec l'ID correspondant
+                                connect: { id: userId }
                             }
                         }
                     });

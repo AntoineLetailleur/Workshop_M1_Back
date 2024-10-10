@@ -27,6 +27,7 @@
     "express": "^4.21.0",
     "jsonapi-serializer": "^3.6.9",
     "jsonwebtoken": "^9.0.2",
+    "postman-to-openapi": "^3.0.1",
     "swagger-ui-express": "^5.0.1",
     "ts-node-dev": "^1.1.8",
     "yamljs": "^0.3.0"
