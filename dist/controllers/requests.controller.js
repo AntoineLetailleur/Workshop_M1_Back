@@ -8,47 +8,81 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const users_service_1 = __importDefault(require("../services/users.service"));
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const userService = new users_service_1.default();
 const requestsController = {
     addNewRequest: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { userId, serviceType, cityId } = req.body;
-            const userList = prisma.request.findMany({
+            const { userId, serviceType } = req.body;
+            const myUser = yield userService.findUserById(userId);
+            const cityId = myUser === null || myUser === void 0 ? void 0 : myUser.cityId;
+            const userList = yield prisma.requests.findMany({
                 where: {
-                    serviceId: serviceType,
+                    service: serviceType,
                     cityId: cityId
                 },
                 select: {
-                    users: true
+                    user: {
+                        select: { id: true } // Sélectionne uniquement l'ID des utilisateurs
+                    }
                 }
             });
-            console.log("userList: ", userList);
+            // Récupération de la liste des users pour une requête
             if (userList.length > 0) {
-                // La liste des utilisateurs n'est pas vide
-                console.log("Il y a des utilisateurs :", userList);
+                // Itérer sur userList et vérifier les IDs
+                var foundUser = false;
+                for (const request of userList) {
+                    for (const user of request.user) {
+                        console.log("User ID:", user.id); // Affiche chaque ID utilisateur
+                        // Vérifiez si l'utilisateur a l'ID que vous recherchez
+                        if (user.id === userId) {
+                            foundUser = true;
+                        }
+                    }
+                }
+                if (foundUser) {
+                    console.log("L'utilisateur a déjà exprimé cette demande !");
+                    return res.status(500).send("Cette demande a déjà été envoyée...");
+                }
+                else {
+                    console.log("L'utilisateur se joint à une demande déjà exprimée");
+                    // Ajout de l'utilisateur à la liste en base de données
+                    const updatedRequest = yield prisma.requests.update({
+                        where: {
+                            service: serviceType,
+                            cityId: cityId
+                        },
+                        data: {
+                            user: {
+                                connect: { id: userId } // Connexion de l'utilisateur avec l'ID correspondant
+                            }
+                        }
+                    });
+                    console.log("Demande mise à jour avec succès :", updatedRequest);
+                    return res.status(200).send("L'utilisateur a été ajouté à la demande.");
+                }
             }
             else {
-                // La liste des utilisateurs est vide
-                console.log("Aucun utilisateur trouvé.");
-                const request = prisma.request.create({
+                console.log("L'utilisateur exprime une nouvelle requête");
+                const request = yield prisma.requests.create({
                     data: {
-                        serviceId: serviceType,
+                        service: serviceType,
                         cityId: cityId,
-                        users: userId
-                    },
-                    select: {
-                        id: true,
-                        answerId: true,
-                        serviceId: true,
-                        cityId: true
+                        user: {
+                            connect: { id: userId }
+                        },
+                        isAccepted: false
                     }
                 });
-                console.log("Request :", JSON.stringify(request, null, 2));
+                console.log(request);
                 return res.status(200).send(request);
             }
-            return res.status(200);
         }
         catch (error) {
             console.error(error);

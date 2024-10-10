@@ -7,7 +7,6 @@ export default class UsersService {
   async connection({ email }: { email: string }) {
     try {
       const user = await prisma.users.findUnique({
-      const user = await prisma.users.findUnique({
         where: {
           email: email,
         }
@@ -22,7 +21,6 @@ export default class UsersService {
   async findUserByEmail(email: string) {
     try {
       const user = await prisma.users.findUnique({
-      const user = await prisma.users.findUnique({
         where: {
           email: email,
         },
@@ -36,7 +34,6 @@ export default class UsersService {
   async findUserById(idUser : number){
     try{
       const user = await prisma.users.findUnique({
-      const user = await prisma.users.findUnique({
         where : {
           id : idUser
         }
@@ -49,7 +46,6 @@ export default class UsersService {
 
   async updateCityById(idUser : number,  cityId : number){
     try{
-      const updateUser = await prisma.users.update({
       const updateUser = await prisma.users.update({
         where: {
           id: idUser, 
