@@ -17,129 +17,69 @@ const crypto_1 = __importDefault(require("crypto"));
 const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        // Créer des villes
-        const city1 = yield prisma.city.create({
+        // Ajout des villes
+        const carvin = yield prisma.cities.create({
             data: {
-                postal: 75001,
-                name: "Paris",
-                x: 48,
-                y: 2,
+                postal: 62220,
+                name: 'Carvin',
+                x: 50,
+                y: 3,
             },
         });
-        const city2 = yield prisma.city.create({
+        const lille = yield prisma.cities.create({
             data: {
-                postal: 13001,
-                name: "Marseille",
-                x: 43,
-                y: 5,
+                postal: 59000,
+                name: 'Lille',
+                x: 50,
+                y: 3,
             },
         });
-        // Créer des services
-        const service1 = yield prisma.service.create({
-            data: {},
-        });
-        const service2 = yield prisma.service.create({
-            data: {},
-        });
-        // Créer des utilisateurs
-        const user1 = yield prisma.user.create({
+        // Ajout des utilisateurs
+        const daniel = yield prisma.users.create({
             data: {
-                email: "user1@example.com",
-                password: crypto_1.default.createHash("sha256").update("password123").digest("hex"),
-                role: 'USER',
-                city: {
-                    connect: { id: city1.id },
-                },
-            },
-        });
-        const user2 = yield prisma.user.create({
-            data: {
-                email: "user2@example.com",
-                password: crypto_1.default.createHash("sha256").update("password456").digest("hex"),
-                role: 'USER',
-                city: {
-                    connect: { id: city2.id },
-                },
-            },
-        });
-        // Créer des docteurs
-        const doctor1 = yield prisma.doctor.create({
-            data: {
-                user: {
-                    connect: { id: user1.id },
-                },
-                service: {
-                    connect: { id: service1.id },
-                },
-            },
-        });
-        const doctor2 = yield prisma.doctor.create({
-            data: {
-                user: {
-                    connect: { id: user2.id },
-                },
-                service: {
-                    connect: { id: service2.id },
-                },
-            },
-        });
-        // Créer des réponses (Answer)
-        const answer1 = yield prisma.answer.create({
-            data: {
+                email: 'daniel@gmail.com',
+                password: 'password123', // Mettez ici un vrai hash pour la sécurité
+                role: 'DOCTOR',
+                cityId: carvin.id,
                 doctor: {
-                    connect: { id: doctor1.id },
-                },
-                start_date: new Date('2023-01-01T10:00:00Z'),
-                end_date: new Date('2023-01-01T12:00:00Z'),
-                seats: 10,
-                patients: {
-                    connect: [{ id: user1.id }, { id: user2.id }],
+                    create: {
+                        service: 'cardiology',
+                    },
                 },
             },
         });
-        const answer2 = yield prisma.answer.create({
+        const axel = yield prisma.users.create({
             data: {
-                doctor: {
-                    connect: { id: doctor2.id },
-                },
-                start_date: new Date('2023-02-01T14:00:00Z'),
-                end_date: new Date('2023-02-01T16:00:00Z'),
-                seats: 15,
-                patients: {
-                    connect: [{ id: user2.id }],
-                },
+                email: 'axel@gmail.com',
+                password: 'password123',
+                role: 'USER',
+                cityId: lille.id,
             },
         });
-        // Créer des requêtes (Request)
-        const request1 = yield prisma.request.create({
+        const antoine = yield prisma.users.create({
             data: {
-                answer: {
-                    connect: { id: answer1.id },
-                },
-                service: {
-                    connect: { id: service1.id },
-                },
-                city: {
-                    connect: { id: city1.id },
-                },
+                email: 'antoine@gmail.com',
+                password: 'password123',
+                role: 'ADMIN',
+                cityId: lille.id,
             },
         });
-        const request2 = yield prisma.request.create({
+        // Ajout de la requête
+        yield prisma.requests.create({
             data: {
-                answer: {
-                    connect: { id: answer2.id },
-                },
-                service: {
-                    connect: { id: service2.id },
-                },
-                city: {
-                    connect: { id: city2.id },
-                },
+                service: 'cardiology',
+                isAccepted: false,
+                cityId: carvin.id,
             },
         });
-        prisma.$disconnect();
-        console.log('Seeding terminé!');
-        yield prisma.$disconnect();
     });
 }
-main();
+main()
+    .then(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield prisma.$disconnect();
+}))
+    .catch((e) => __awaiter(void 0, void 0, void 0, function* () {
+    console.error(e);
+    yield prisma.$disconnect();
+    process.exit(1);
+}));

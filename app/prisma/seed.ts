@@ -1,144 +1,76 @@
-import { PrismaClient } from "@prisma/client";
-import crypto from "crypto";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function main() : Promise<void> {
-  // Créer des villes
-  const city1 = await prisma.city.create({
+async function main() {
+  // Ajout des villes
+  const carvin = await prisma.cities.create({
     data: {
-      postal: 75001,
-      name: "Paris",
-      x: 48,
-      y: 2,
+      postal: 62220,
+      name: 'Carvin',
+      x: 50,
+      y: 3,
     },
   });
 
-  const city2 = await prisma.city.create({
+  const lille = await prisma.cities.create({
     data: {
-      postal: 13001,
-      name: "Marseille",
-      x: 43,
-      y: 5,
+      postal: 59000,
+      name: 'Lille',
+      x: 50,
+      y: 3,
     },
   });
 
-  // Créer des services
-  const service1 = await prisma.service.create({
-    data: {},
-  });
-
-  const service2 = await prisma.service.create({
-    data: {},
-  });
-
-  // Créer des utilisateurs
-  const user1 = await prisma.user.create({
+  // Ajout des utilisateurs
+  const daniel = await prisma.users.create({
     data: {
-      email: "user1@example.com",
-      password: crypto.createHash("sha256").update("password123").digest("hex"),
-      role: 'USER',
-      city: {
-        connect: { id: city1.id },
-      },
-    },
-  });
-
-  const user2 = await prisma.user.create({
-    data: {
-      email: "user2@example.com",
-      password: crypto.createHash("sha256").update("password456").digest("hex"),
-      role: 'USER',
-      city: {
-        connect: { id: city2.id },
-      },
-    },
-  });
-
-  // Créer des docteurs
-  const doctor1 = await prisma.doctor.create({
-    data: {
-      user: {
-        connect: { id: user1.id },
-      },
-      service: {
-        connect: { id: service1.id },
-      },
-    },
-  });
-
-  const doctor2 = await prisma.doctor.create({
-    data: {
-      user: {
-        connect: { id: user2.id },
-      },
-      service: {
-        connect: { id: service2.id },
-      },
-    },
-  });
-
-  // Créer des réponses (Answer)
-  const answer1 = await prisma.answer.create({
-    data: {
+      email: 'daniel@gmail.com',
+      password: 'password123',  // Mettez ici un vrai hash pour la sécurité
+      role: 'DOCTOR',
+      cityId: carvin.id,
       doctor: {
-        connect: { id: doctor1.id },
-      },
-      start_date: new Date('2023-01-01T10:00:00Z'),
-      end_date: new Date('2023-01-01T12:00:00Z'),
-      seats: 10,
-      patients: {
-        connect: [{ id: user1.id }, { id: user2.id }],
+        create: {
+          service: 'cardiology',
+        },
       },
     },
   });
 
-  const answer2 = await prisma.answer.create({
+  const axel = await prisma.users.create({
     data: {
-      doctor: {
-        connect: { id: doctor2.id },
-      },
-      start_date: new Date('2023-02-01T14:00:00Z'),
-      end_date: new Date('2023-02-01T16:00:00Z'),
-      seats: 15,
-      patients: {
-        connect: [{ id: user2.id }],
-      },
+      email: 'axel@gmail.com',
+      password: 'password123',
+      role: 'USER',
+      cityId: lille.id,
     },
   });
 
-  // Créer des requêtes (Request)
-  const request1 = await prisma.request.create({
+  const antoine = await prisma.users.create({
     data: {
-      answer: {
-        connect: { id: answer1.id },
-      },
-      service: {
-        connect: { id: service1.id },
-      },
-      city: {
-        connect: { id: city1.id },
-      },
+      email: 'antoine@gmail.com',
+      password: 'password123',
+      role: 'ADMIN',
+      cityId: lille.id,
     },
   });
 
-  const request2 = await prisma.request.create({
+  // Ajout de la requête
+  await prisma.requests.create({
     data: {
-      answer: {
-        connect: { id: answer2.id },
-      },
-      service: {
-        connect: { id: service2.id },
-      },
-      city: {
-        connect: { id: city2.id },
-      },
+      service: 'cardiology',
+      isAccepted: false,
+      cityId: carvin.id,
     },
   });
-
-  prisma.$disconnect();
-  console.log('Seeding terminé!');
-
-  await prisma.$disconnect();
 }
-main();
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
