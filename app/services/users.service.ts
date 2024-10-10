@@ -1,5 +1,5 @@
 require("dotenv").config();
-import { PrismaClient } from "@prisma/client";
+import { Role, cities, PrismaClient } from "@prisma/client";
 
 
 const prisma = new PrismaClient();
@@ -83,6 +83,35 @@ export default class UsersService {
       return user;
     } catch (error: any) {
       throw new Error(`Error finding user by email: ${error.message}`);
+    }
+  }
+
+  async createUser(userData: {
+    email: string;
+    cityId: number;
+    password: string;
+    role: Role
+  }) {
+    try {
+      const newUser = await prisma.users.create({
+        data: {
+          email: userData.email,
+          password: userData.password,
+          role: userData.role,
+          cityId: userData.cityId,
+        },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          password: false,
+          city: true
+        }
+      });
+
+      return newUser;
+    } catch (error: any) {
+      throw new Error(`Error creating user: ${error.message}`);
     }
   }
 }

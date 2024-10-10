@@ -103,6 +103,31 @@ class UsersService {
             }
         });
     }
+    createUser(userData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const newUser = yield prisma.users.create({
+                    data: {
+                        email: userData.email,
+                        password: userData.password,
+                        role: userData.role,
+                        cityId: userData.cityId,
+                    },
+                    select: {
+                        id: true,
+                        email: true,
+                        role: true,
+                        password: false,
+                        city: true
+                    }
+                });
+                return newUser;
+            }
+            catch (error) {
+                throw new Error(`Error creating user: ${error.message}`);
+            }
+        });
+    }
 }
 exports.default = UsersService;
 module.exports = UsersService;

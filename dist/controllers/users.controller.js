@@ -18,6 +18,9 @@ const crypto_1 = __importDefault(require("crypto"));
 const src_1 = require("../src");
 const error_serializer_1 = require("../serializers/error.serializer");
 const citys_service_1 = __importDefault(require("../services/citys.service"));
+const axios_1 = __importDefault(require("axios"));
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const usersController = {
     validateRequest: (requiredRole) => {
         return (req, res, next) => {
@@ -168,6 +171,76 @@ const usersController = {
             res.status(500).json(formattedError);
             return;
         }
-    })
+    }),
+    createUser: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { email, password, city } = req.body;
+            const usersService = new users_service_1.default();
+            const existingUser = yield usersService.findUserByEmail(email);
+            if (existingUser) {
+                const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                    {
+                        status: '400',
+                        title: 'Bad request',
+                        detail: 'l\'email existe déjà.',
+                    },
+                ]);
+                res.set('Content-Type', 'application/vnd.api+json');
+                res.status(400).json(formattedError);
+                return;
+            }
+            const { data } = yield axios_1.default.get(`https://api-adresse.data.gouv.fr/search/?q=${city}`);
+            if (!data || !data.features || data.features.length === 0) {
+                const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                    {
+                        status: "400",
+                        title: "City not found",
+                        detail: "La ville n'a pas été trouvée dans l'API.",
+                    },
+                ]);
+                res.status(400).json(formattedError);
+                return;
+            }
+            const cityFeature = data.features[0];
+            const { postcode, city: name } = cityFeature.properties;
+            const [longitude, latitude] = cityFeature.geometry.coordinates;
+            console.log(latitude, longitude);
+            let existingCity = yield prisma.cities.findFirst({
+                where: { postal: parseInt(postcode) },
+            });
+            if (!existingCity) {
+                existingCity = yield prisma.cities.create({
+                    data: {
+                        postal: parseInt(postcode),
+                        name: name,
+                        x: latitude,
+                        y: longitude,
+                    },
+                });
+            }
+            const hashedPassword = crypto_1.default.createHash('sha256').update(password).digest('hex');
+            var data_ = yield usersService.createUser({
+                email,
+                cityId: existingCity.id,
+                password: hashedPassword,
+                role: 'USER'
+            });
+            res.set('Content-Type', 'application/vnd.api+json');
+            res.status(200).send(data_);
+        }
+        catch (error) {
+            console.error(error);
+            const formattedError = (0, error_serializer_1.formatJsonApiError)([
+                {
+                    status: '500',
+                    title: 'Internal Server Error',
+                    detail: error,
+                },
+            ]);
+            res.set('Content-Type', 'application/vnd.api+json');
+            res.status(500).json(formattedError);
+            return;
+        }
+    }),
 };
 exports.default = usersController;

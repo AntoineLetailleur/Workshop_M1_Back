@@ -9,4 +9,5 @@ const router = express_1.default.Router();
 router.post("/users/auth", users_controller_1.default.login);
 router.patch("/users/updateCity", users_controller_1.default.validateRequest(['ADMIN', 'USER', 'DOCTOR']), users_controller_1.default.updateCity);
 router.get("/users/infos", users_controller_1.default.validateRequest(['USER', 'DOCTOR', 'ADMIN']), users_controller_1.default.getUserInfos);
+router.post("/users", users_controller_1.default.createUser);
 exports.default = router;
