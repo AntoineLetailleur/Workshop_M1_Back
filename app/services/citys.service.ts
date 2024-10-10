@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export default class CityService {
     async addNewCity(postal : number, name : string, x : number, y : number) {
         try{
-            const city = await prisma.city.create({
+            const city = await prisma.cities.create({
                 data : {
                     postal : postal,
                     name : name,
@@ -22,7 +22,7 @@ export default class CityService {
 
     async findByName(name : string){
         try{
-            const city = await prisma.city.findFirst({
+            const city = await prisma.cities.findFirst({
                 where : {
                     name : name
                 }

@@ -7,7 +7,7 @@ import { config } from "dotenv";
 import path from "path";
 import userRouter from "../routers/users.router";
 import cityRouter from "../routers/citys.router";
-
+import "../interfaces/requests.interface";
 import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
 

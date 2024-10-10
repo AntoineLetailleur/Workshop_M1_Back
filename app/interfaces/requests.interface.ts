@@ -1,4 +1,12 @@
 import { Request } from "express";
-export interface RequestTest extends Request {
-  userId: string;
+
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: number;
+    }
+  }
 }
+
+console.log("Custom express types loaded!");
+

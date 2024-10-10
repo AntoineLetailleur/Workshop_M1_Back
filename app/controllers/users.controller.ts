@@ -4,12 +4,11 @@ import crypto from "crypto";
 import { Response, Request } from "express";
 import { tokenSecret } from "../src";
 import { formatJsonApiError } from "../serializers/error.serializer";
-import { RequestTest } from "../interfaces/requests.interface";
 import CityService from "../services/citys.service";
 
 const usersController = {
   validateRequest: (requiredRole: string[]) => {
-    return (req: RequestTest, res: Response, next: Function) => {
+    return (req: Request, res: Response, next: Function) : void => {
       const { authorization } = req.headers;
 
       if (!authorization) {
@@ -22,7 +21,8 @@ const usersController = {
           },
         ]);
         res.set("Content-Type", "application/vnd.api+json");
-        return res.status(401).json(formattedError);
+        res.status(401).json(formattedError);
+        return;
       }
 
       const token = authorization.split("Bearer ")[1];
@@ -49,7 +49,8 @@ const usersController = {
             },
           ]);
           res.set("Content-Type", "application/vnd.api+json");
-          return res.status(403).json(formattedError);
+          res.status(403).json(formattedError);
+          return;
         }
       } catch (error) {
         console.log(error);
@@ -60,8 +61,9 @@ const usersController = {
             detail: error,
           },
         ]);
-        res.set("Content-Type", "application/vnd.api+json");
-        return res.status(500).json(formattedError);
+        res.set("Content-Type", "application/vnd.api+json"); 
+        res.status(500).json(formattedError);
+        return;
       }
     };
   },
@@ -90,12 +92,13 @@ const usersController = {
         ]);
         res.set("Content-Type", "application/vnd.api+json");
         res.status(400).json(formattedError);
+        return;
       }
 
       const token = jwt.sign(
         {
           userId: user.id,
-          role: user.role.libelle,
+          role: user.role,
         },
         tokenSecret,
         {
@@ -118,18 +121,7 @@ const usersController = {
       ]);
       res.set("Content-Type", "application/vnd.api+json");
       res.status(500).json(formattedError);
-    }
-  },
-
-  getAll: async (req: Request, res: Response): Promise<any> => {
-    try {
-      const userService = new UsersService();
-      var data = await userService.getAll();
-      if (data) {
-        return res.status(200).json(data);
-      }
-    } catch (error) {
-      return res.status(500).json(error);
+      return;
     }
   },
 

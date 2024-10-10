@@ -107,8 +107,9 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true,
     "outDir": "./dist",
-    "types": ["node"]
+    "typeRoots": ["./app/interfaces/*", "./node_modules/@types"],
+    "types": ["node", "express"]
   },
-  "include": ["app/**/*.ts", "app/prisma/seed.ts"],
+  "include": ["./app/interfaces", "./app/**/*.ts", "app/prisma/seed.ts"],
   "exclude": ["node_modules"]
 }

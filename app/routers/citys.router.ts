@@ -1,9 +1,9 @@
 import express from "express";
-import { Role } from "@prisma/client";
 import cityController from "../controllers/citys.controller";
+import usersController from "../controllers/users.controller";
 
 const router = express.Router();
 
-router.post("/city", cityController.addNewCity);
+router.post("/city", usersController.validateRequest(["USER", "DOCTOR", "ADMIN"]), cityController.addNewCity);
 
 export default router;

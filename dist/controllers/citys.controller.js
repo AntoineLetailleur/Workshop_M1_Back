@@ -16,18 +16,6 @@ const error_serializer_1 = require("../serializers/error.serializer");
 const citys_service_1 = __importDefault(require("../services/citys.service"));
 const cityController = {
     addNewCity: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        /*
-        model City {
-            id     Int    @id @default(autoincrement())
-            postal Int
-            name String
-            x Int
-            y Int
-          
-            Request Request[]
-          
-            User User[]
-        */
         try {
             const { postal, name, x, y } = req.body;
             const cityService = new citys_service_1.default();
@@ -35,7 +23,6 @@ const cityController = {
             return res.status(200).send(city);
         }
         catch (error) {
-            console.error(error);
             const formattedError = (0, error_serializer_1.formatJsonApiError)([
                 {
                     status: '500',

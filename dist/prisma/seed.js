@@ -18,7 +18,7 @@ const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // Créer des villes
-        const city1 = yield prisma.city.create({
+        const city1 = yield prisma.cities.create({
             data: {
                 postal: 75001,
                 name: "Paris",
@@ -26,7 +26,7 @@ function main() {
                 y: 2,
             },
         });
-        const city2 = yield prisma.city.create({
+        const city2 = yield prisma.cities.create({
             data: {
                 postal: 13001,
                 name: "Marseille",
@@ -34,15 +34,8 @@ function main() {
                 y: 5,
             },
         });
-        // Créer des services
-        const service1 = yield prisma.service.create({
-            data: {},
-        });
-        const service2 = yield prisma.service.create({
-            data: {},
-        });
         // Créer des utilisateurs
-        const user1 = yield prisma.user.create({
+        const user1 = yield prisma.users.create({
             data: {
                 email: "user1@example.com",
                 password: crypto_1.default.createHash("sha256").update("password123").digest("hex"),
@@ -52,7 +45,7 @@ function main() {
                 },
             },
         });
-        const user2 = yield prisma.user.create({
+        const user2 = yield prisma.users.create({
             data: {
                 email: "user2@example.com",
                 password: crypto_1.default.createHash("sha256").update("password456").digest("hex"),
@@ -62,29 +55,35 @@ function main() {
                 },
             },
         });
+        const user3 = yield prisma.users.create({
+            data: {
+                email: "user3@example.com",
+                password: crypto_1.default.createHash("sha256").update("pass").digest("hex"),
+                role: 'DOCTOR',
+                city: {
+                    connect: { id: city2.id },
+                },
+            },
+        });
         // Créer des docteurs
-        const doctor1 = yield prisma.doctor.create({
+        const doctor1 = yield prisma.doctors.create({
             data: {
                 user: {
                     connect: { id: user1.id },
                 },
-                service: {
-                    connect: { id: service1.id },
-                },
+                service: "Service 1", // Add the missing 'service' property
             },
         });
-        const doctor2 = yield prisma.doctor.create({
+        const doctor2 = yield prisma.doctors.create({
             data: {
                 user: {
                     connect: { id: user2.id },
                 },
-                service: {
-                    connect: { id: service2.id },
-                },
+                service: "Service 2", // Add the missing 'service' property
             },
         });
         // Créer des réponses (Answer)
-        const answer1 = yield prisma.answer.create({
+        const answer1 = yield prisma.answers.create({
             data: {
                 doctor: {
                     connect: { id: doctor1.id },
@@ -97,7 +96,7 @@ function main() {
                 },
             },
         });
-        const answer2 = yield prisma.answer.create({
+        const answer2 = yield prisma.answers.create({
             data: {
                 doctor: {
                     connect: { id: doctor2.id },
@@ -106,35 +105,39 @@ function main() {
                 end_date: new Date('2023-02-01T16:00:00Z'),
                 seats: 15,
                 patients: {
-                    connect: [{ id: user2.id }],
+                    connect: [{ id: user3.id }],
                 },
             },
         });
         // Créer des requêtes (Request)
-        const request1 = yield prisma.request.create({
+        const request1 = yield prisma.requests.create({
             data: {
                 answer: {
                     connect: { id: answer1.id },
                 },
-                service: {
-                    connect: { id: service1.id },
-                },
                 city: {
                     connect: { id: city1.id },
                 },
+                service: "cardiologie",
+                isAccepted: true,
+                user: {
+                    connect: { id: user1.id }
+                }
             },
         });
-        const request2 = yield prisma.request.create({
+        const request2 = yield prisma.requests.create({
             data: {
                 answer: {
                     connect: { id: answer2.id },
                 },
-                service: {
-                    connect: { id: service2.id },
-                },
                 city: {
                     connect: { id: city2.id },
                 },
+                service: "cardiologie",
+                isAccepted: true,
+                user: {
+                    connect: { id: user2.id }
+                }
             },
         });
         prisma.$disconnect();
