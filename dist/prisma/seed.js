@@ -137,6 +137,7 @@ function main() {
                 },
             },
         });
+        prisma.$disconnect();
         console.log('Seeding terminé!');
         yield prisma.$disconnect();
     });

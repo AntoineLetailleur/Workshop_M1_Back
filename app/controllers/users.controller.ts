@@ -5,6 +5,7 @@ import { Response, Request } from "express";
 import { tokenSecret } from "../src";
 import { formatJsonApiError } from "../serializers/error.serializer";
 import { RequestTest } from "../interfaces/requests.interface";
+import CityService from "../services/citys.service";
 
 const usersController = {
   validateRequest: (requiredRole: string[]) => {
@@ -131,6 +132,32 @@ const usersController = {
       return res.status(500).json(error);
     }
   },
+
+  updateCity : async (req : Request, res : Response) : Promise<any> => {
+    try{
+      const userService = new UsersService();
+      const cityService = new CityService();
+      const {idUser, name, postal, x, y} = req.body;
+
+      //Récupération de l'utilisateur
+      const user = await userService.findUserById(idUser);
+      if(!user){
+        return res.status(500).json("No user");
+      }
+
+      //Si un utilisateur existe alors on update sa ville
+      //Il faut checker que la nouvelle ville de l'utilisateur existe
+      var city = await cityService.findByName(name);
+      if(!city){
+        //On ajout un nouvelle utilisateur dans la city déjà existante et on update le cityId au niveau du user
+        city = await cityService.addNewCity(postal,name,x,y);
+      }
+      const updateUser = await userService.updateCityById(user.id,city.id);
+      res.status(200).send(updateUser);
+    }catch (error) {
+      return res.status(500).json(error);
+    }
+  }
 };
 
 export default usersController;

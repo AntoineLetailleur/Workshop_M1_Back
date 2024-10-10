@@ -3,8 +3,7 @@ import crypto from "crypto";
 
 const prisma = new PrismaClient();
 
-async function main() {
-
+async function main() : Promise<void> {
   // Créer des villes
   const city1 = await prisma.city.create({
     data: {
@@ -137,9 +136,9 @@ async function main() {
     },
   });
 
+  prisma.$disconnect();
   console.log('Seeding terminé!');
 
   await prisma.$disconnect();
 }
-
 main();

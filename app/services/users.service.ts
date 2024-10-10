@@ -42,6 +42,35 @@ export default class UsersService {
       throw new Error(`Error during connection: ${error.message}`);
     }
   }
+
+  async findUserById(idUser : number){
+    try{
+      const user = await prisma.user.findUnique({
+        where : {
+          id : idUser
+        }
+      });
+      return user;
+    }catch(error:any){
+      throw new Error(`Error during connection: ${error.message}`);
+    }
+  }
+
+  async updateCityById(idUser : number,  cityId : number){
+    try{
+      const updateUser = await prisma.user.update({
+        where: {
+          id: idUser, 
+        },
+        data: {
+          cityId: cityId, 
+        },
+      });
+      return updateUser;
+    }catch(error:any){
+      throw new Error(`Error during connection: ${error.message}`);
+    }
+  }
 }
 
 module.exports = UsersService;

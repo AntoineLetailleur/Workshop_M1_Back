@@ -6,6 +6,8 @@ import { createServer } from "http";
 import { config } from "dotenv";
 import path from "path";
 import userRouter from "../routers/users.router";
+import cityRouter from "../routers/citys.router";
+
 import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
 
@@ -24,6 +26,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.json({ Message: "Bienvenue sur l'API de SanteConnect" });
 });
 app.use("/", userRouter);
+app.use("/", cityRouter);
 
 ////    Utilitaires    \\\\
 // const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");
