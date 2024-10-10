@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
+const crypto_1 = __importDefault(require("crypto"));
 const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -41,7 +45,7 @@ function main() {
         const user1 = yield prisma.user.create({
             data: {
                 email: "user1@example.com",
-                password: "password123",
+                password: crypto_1.default.createHash("sha256").update("password123").digest("hex"),
                 role: 'USER',
                 city: {
                     connect: { id: city1.id },
@@ -51,7 +55,7 @@ function main() {
         const user2 = yield prisma.user.create({
             data: {
                 email: "user2@example.com",
-                password: "password456",
+                password: crypto_1.default.createHash("sha256").update("password456").digest("hex"),
                 role: 'USER',
                 city: {
                     connect: { id: city2.id },
@@ -135,6 +139,7 @@ function main() {
         });
         prisma.$disconnect();
         console.log('Seeding terminé!');
+        yield prisma.$disconnect();
     });
 }
 main();

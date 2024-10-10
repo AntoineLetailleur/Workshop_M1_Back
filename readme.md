@@ -14,8 +14,13 @@ Thibault SCORIELLE : Dev FRONT
   
 Depuis votre dossier 'app'  
 
-`npx prisma generate`
-
+`npx prisma generate`  // Pour générer le client Prisma
+`npx prisma migrate deploy` // Pour appliquer les migrations  
+  
+Pour peupler votre base de données  
+  
+`npm run seed`  
+  
 ## Lancer l'API
 
 `npm start`
@@ -24,6 +29,6 @@ Depuis votre dossier 'app'
 
 `echo $env:DATABASE_URL`
 
-## Lancer la base de données docker
+## Lancer le container pour la base de données
 
 `docker run --name some-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest`

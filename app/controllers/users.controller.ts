@@ -66,7 +66,7 @@ const usersController = {
     };
   },
 
-  async login(req: Request, res: Response) {
+  login: async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body;
       req.body.password = crypto

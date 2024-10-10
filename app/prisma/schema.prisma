@@ -13,65 +13,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  password    String
-  role    Role  @default(USER)
-  doctor Doctor?
-  answers Answer[]
-  city City @relation(fields: [cityId], references: [id])
-  cityId Int
+  id                Int                 @id @default(autoincrement())
+  email             String              @unique
+  password          String
+  role              Role                @default(USER)
+  doctor            Doctor?
+  answers           Answer[]
+  city              City                @relation(fields: [cityId], references: [id])
+  cityId            Int
 }
 
 model Doctor {
-  id     Int    @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
-  userId   Int @unique
-  service Service @relation(fields: [serviceId], references: [id])
-  serviceId Int @unique
-
-
-  Answer Answer[]
+  id                Int                 @id @default(autoincrement())
+  user              User                @relation(fields: [userId], references: [id])
+  userId            Int                 @unique
+  service           Service             @relation(fields: [serviceId], references: [id])
+  serviceId         Int                 @unique
+  Answer            Answer[]
 }
 model Service {
-  id     Int    @id @default(autoincrement())
-  doctors Doctor[]
-  requests Request[]
+  id                Int                 @id @default(autoincrement())
+  doctors           Doctor[]
+  requests          Request[]
 }
 
 model Request {
-  id     Int    @id @default(autoincrement())
-  answer Answer @relation(fields: [answerId], references: [id])
-  answerId Int @unique
-  service Service @relation(fields: [serviceId], references: [id])
-  serviceId Int @unique
-  city City @relation(fields: [cityId], references: [id])
-  cityId Int @unique
+  id                Int                 @id @default(autoincrement())
+  answer            Answer              @relation(fields: [answerId], references: [id])
+  answerId          Int                 @unique
+  service           Service             @relation(fields: [serviceId], references: [id])
+  serviceId         Int                 @unique
+  city              City                @relation(fields: [cityId], references: [id])
+  cityId            Int                 @unique
 }
 
 model Answer {
-  id     Int    @id @default(autoincrement())
-  doctor Doctor @relation(fields: [doctorId], references: [id])
-  doctorId Int @unique
-  start_date DateTime
-  end_date DateTime
+  id                 Int                @id @default(autoincrement())
+  doctor             Doctor             @relation(fields: [doctorId], references: [id])
+  doctorId           Int                @unique
+  start_date         DateTime
+  end_date           DateTime
   seats Int
   patients User[]
-
-
   Request Request[]
 }
 
 model City {
-  id     Int    @id @default(autoincrement())
-  postal Int
-  name String
-  x Int
-  y Int
-
-  Request Request[]
-
-  User User[]
+  id                  Int               @id @default(autoincrement())
+  postal              Int
+  name                String
+  x                   Int
+  y                   Int
+  Request             Request[]
+  User                User[]
 }
 
 enum Role {
