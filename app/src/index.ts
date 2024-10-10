@@ -14,15 +14,14 @@ import swaggerUi from "swagger-ui-express";
 
 
 ////    Config serveur HTTP    \\\\
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 const app = express();
-app.use(bodyParser.json());
 const server = createServer(app);
 const port = process.env.PORT || 3000;
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
 server.listen(port, () => {
   console.log(`Server http is running at : http://localhost:${port}`);
 });
+app.use(bodyParser.json());
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.get("/", (_req: Request, res: Response) => {
   res.json({ Message: "Bienvenue sur l'API de SanteConnect" });
 });
@@ -31,6 +30,7 @@ app.use("/", cityRouter);
 app.use("/", requestsRouter);
 
 ////    Utilitaires    \\\\
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");
 // const swaggerDocument = YAML.load(swaggerDocumentPath);
 export const tokenSecret = crypto.randomBytes(64).toString("hex");

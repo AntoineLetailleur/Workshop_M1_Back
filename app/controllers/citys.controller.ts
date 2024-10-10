@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import { formatJsonApiError } from "../serializers/error.serializer";
 import CityService from "../services/citys.service";
 
+
 const cityController = {
     addNewCity : async (req: Request, res: Response) : Promise<any> =>  {
         try {

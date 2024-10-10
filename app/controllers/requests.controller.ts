@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import UsersService from '../services/users.service';
+
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const userService = new UsersService();

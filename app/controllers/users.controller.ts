@@ -6,6 +6,7 @@ import { tokenSecret } from "../src";
 import { formatJsonApiError } from "../serializers/error.serializer";
 import CityService from "../services/citys.service";
 
+
 const usersController = {
   validateRequest: (requiredRole: string[]) => {
     return (req: Request, res: Response, next: Function) : void => {

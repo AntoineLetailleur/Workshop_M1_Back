@@ -1,5 +1,3 @@
-import { Serializer } from "jsonapi-serializer";
-
 export function formatJsonApiError(errors: any[]): any {
   return {
     errors: errors.map((error) => ({

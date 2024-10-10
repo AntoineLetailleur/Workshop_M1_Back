@@ -1,6 +1,6 @@
 import express from "express";
 import usersController from "../controllers/users.controller";
-import { Role } from "@prisma/client";
+
 
 const router = express.Router();
 
