@@ -16,7 +16,7 @@ class UsersService {
     connection(_a) {
         return __awaiter(this, arguments, void 0, function* ({ email }) {
             try {
-                const user = yield prisma.user.findUnique({
+                const user = yield prisma.users.findUnique({
                     where: {
                         email: email,
                     },
@@ -34,7 +34,7 @@ class UsersService {
     findUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield prisma.user.findUnique({
+                const user = yield prisma.users.findUnique({
                     where: {
                         email: email,
                     },
@@ -49,8 +49,41 @@ class UsersService {
     getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const users = yield prisma.user.findMany();
+                const users = yield prisma.users.findMany();
                 return users;
+            }
+            catch (error) {
+                throw new Error(`Error during connection: ${error.message}`);
+            }
+        });
+    }
+    findUserById(idUser) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield prisma.users.findUnique({
+                    where: {
+                        id: idUser
+                    }
+                });
+                return user;
+            }
+            catch (error) {
+                throw new Error(`Error during connection: ${error.message}`);
+            }
+        });
+    }
+    updateCityById(idUser, cityId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const updateUser = yield prisma.users.update({
+                    where: {
+                        id: idUser,
+                    },
+                    data: {
+                        cityId: cityId,
+                    },
+                });
+                return updateUser;
             }
             catch (error) {
                 throw new Error(`Error during connection: ${error.message}`);

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export default class UsersService {
   async connection({ email }: { email: string }) {
     try {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: {
           email: email,
         },
@@ -23,7 +23,7 @@ export default class UsersService {
 
   async findUserByEmail(email: string) {
     try {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: {
           email: email,
         },
@@ -36,7 +36,7 @@ export default class UsersService {
 
   async getAll(){
     try{
-        const users = await prisma.user.findMany();
+        const users = await prisma.users.findMany();
         return users;
     }catch(error:any){
       throw new Error(`Error during connection: ${error.message}`);
@@ -45,7 +45,7 @@ export default class UsersService {
 
   async findUserById(idUser : number){
     try{
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where : {
           id : idUser
         }
@@ -58,7 +58,7 @@ export default class UsersService {
 
   async updateCityById(idUser : number,  cityId : number){
     try{
-      const updateUser = await prisma.user.update({
+      const updateUser = await prisma.users.update({
         where: {
           id: idUser, 
         },

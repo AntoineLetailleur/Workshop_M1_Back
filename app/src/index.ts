@@ -7,6 +7,7 @@ import { config } from "dotenv";
 import path from "path";
 import userRouter from "../routers/users.router";
 import cityRouter from "../routers/citys.router";
+import requestsRouter from "../routers/requests.router";
 
 import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
@@ -27,6 +28,7 @@ app.get("/", (_req: Request, res: Response) => {
 });
 app.use("/", userRouter);
 app.use("/", cityRouter);
+app.use("/", requestsRouter);
 
 ////    Utilitaires    \\\\
 // const swaggerDocumentPath = path.join(__dirname, "../../app/openAPISpec.yml");

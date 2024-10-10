@@ -17,6 +17,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
 const src_1 = require("../src");
 const error_serializer_1 = require("../serializers/error.serializer");
+const citys_service_1 = __importDefault(require("../services/citys.service"));
 const usersController = {
     validateRequest: (requiredRole) => {
         return (req, res, next) => {
@@ -128,5 +129,29 @@ const usersController = {
             return res.status(500).json(error);
         }
     }),
+    updateCity: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const userService = new users_service_1.default();
+            const cityService = new citys_service_1.default();
+            const { idUser, name, postal, x, y } = req.body;
+            //Récupération de l'utilisateur
+            const user = yield userService.findUserById(idUser);
+            if (!user) {
+                return res.status(500).json("No user");
+            }
+            //Si un utilisateur existe alors on update sa ville
+            //Il faut checker que la nouvelle ville de l'utilisateur existe
+            var city = yield cityService.findByName(name);
+            if (!city) {
+                //On ajout un nouvelle utilisateur dans la city déjà existante et on update le cityId au niveau du user
+                city = yield cityService.addNewCity(postal, name, x, y);
+            }
+            const updateUser = yield userService.updateCityById(user.id, city.id);
+            res.status(200).send(updateUser);
+        }
+        catch (error) {
+            return res.status(500).json(error);
+        }
+    })
 };
 exports.default = usersController;

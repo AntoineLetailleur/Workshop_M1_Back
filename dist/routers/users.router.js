@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const users_controller_1 = __importDefault(require("../controllers/users.controller"));
 const router = express_1.default.Router();
 router.post("/users/auth", users_controller_1.default.login);
+router.patch("/users/updateCity", users_controller_1.default.updateCity);
 exports.default = router;

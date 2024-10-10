@@ -16,12 +16,27 @@ class CityService {
     addNewCity(postal, name, x, y) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const city = yield prisma.city.create({
+                const city = yield prisma.cities.create({
                     data: {
                         postal: postal,
                         name: name,
                         x: x,
                         y: y
+                    }
+                });
+                return city;
+            }
+            catch (error) {
+                throw new Error(`Error during connection: ${error.message}`);
+            }
+        });
+    }
+    findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const city = yield prisma.cities.findFirst({
+                    where: {
+                        name: name
                     }
                 });
                 return city;
