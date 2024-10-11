@@ -16,8 +16,15 @@ require("../interfaces/requests.interface");
 const requests_router_1 = __importDefault(require("../routers/requests.router"));
 const yamljs_1 = __importDefault(require("yamljs"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const cors = require('cors');
 ////    Config serveur HTTP    \\\\
 const app = (0, express_1.default)();
+// Autorise toutes les origines
+app.use(cors());
+// Autorise une origine spécifique
+app.use(cors({
+    origin: '*'
+}));
 const server = (0, http_1.createServer)(app);
 const port = process.env.PORT || 3000;
 server.listen(port, () => {

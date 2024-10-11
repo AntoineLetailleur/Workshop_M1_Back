@@ -12,9 +12,18 @@ import requestsRouter from "../routers/requests.router";
 import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
 
+const cors = require('cors');
+
 
 ////    Config serveur HTTP    \\\\
 const app = express();
+// Autorise toutes les origines
+app.use(cors());
+// Autorise une origine spécifique
+app.use(cors({
+  origin: '*'
+}));
+
 const server = createServer(app);
 const port = process.env.PORT || 3000;
 server.listen(port, () => {

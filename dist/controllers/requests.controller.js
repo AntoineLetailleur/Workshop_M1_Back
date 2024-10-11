@@ -13,13 +13,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const users_service_1 = __importDefault(require("../services/users.service"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const userService = new users_service_1.default();
 const requestsController = {
     addNewRequest: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b;
         try {
-            const { userId, serviceType } = req.body;
+            const token = (_b = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split("Bearer ")[1]) !== null && _b !== void 0 ? _b : '';
+            if (!token) {
+                return res.sendStatus(401);
+            }
+            const decodedToken = jsonwebtoken_1.default.decode(token);
+            if (!decodedToken) {
+                return res.sendStatus(403);
+            }
+            const userId = decodedToken.userId;
+            console.log("userId is " + userId);
+            const { serviceType } = req.body;
             const myUser = yield userService.findUserById(userId);
             const cityId = myUser === null || myUser === void 0 ? void 0 : myUser.cityId;
             const userList = yield prisma.requests.findMany({

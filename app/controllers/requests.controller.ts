@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import UsersService from '../services/users.service';
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 
 const { PrismaClient } = require('@prisma/client');
@@ -9,7 +10,20 @@ const userService = new UsersService();
 const requestsController = {
     addNewRequest: async (req: Request, res: Response): Promise<any> => {
         try{
-            const {userId, serviceType} = req.body;
+            
+            const token = req.headers.authorization?.split("Bearer ")[1] ?? '';
+            if (!token) {
+                return res.sendStatus(401); 
+            }
+
+            const decodedToken = jwt.decode(token);
+
+            if (!decodedToken) {
+                return res.sendStatus(403); 
+            }
+            
+            const userId = (decodedToken as JwtPayload).userId;
+            const {serviceType} = req.body;
             const myUser = await userService.findUserById(userId)
             const cityId = myUser?.cityId
             const userList = await prisma.requests.findMany({
